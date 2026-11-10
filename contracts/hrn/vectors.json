@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "kind": "hodei-hrn-contract-vectors",
+  "contract": "hrn:v2",
+  "note": "Resource vectors are executed by crates/hodei-hrn/tests/vectors.rs. 'syntax' is the parser outcome; 'migration' is the policy decision from migration-matrix.md.",
+  "vectors": [
+    {
+      "id": "canonical/basic",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "releases"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases"
+    },
+    {
+      "id": "canonical/nested-path",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases/v2",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "releases/v2"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases/v2"
+    },
+    {
+      "id": "canonical/v1-empty-region",
+      "origin": "artifacts-v1",
+      "input": "hrn:aws:iam::123456789012:User/alice",
+      "syntax": "valid",
+      "migration": "alias",
+      "parsed": {
+        "partition": "aws",
+        "service": "iam",
+        "region": "",
+        "account": "123456789012",
+        "resource_type": "User",
+        "resource_path": "alice"
+      },
+      "canonical": "hrn:aws:iam::123456789012:User/alice"
+    },
+    {
+      "id": "canonical/service-case",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:Artifacts:eu-west-1:acme:repository/releases",
+      "syntax": "valid",
+      "migration": "canonicalization",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "releases"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases"
+    },
+    {
+      "id": "canonical/global-region-literal",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:audit:global:acme:event/1",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "audit",
+        "region": "global",
+        "account": "acme",
+        "resource_type": "event",
+        "resource_path": "1"
+      },
+      "canonical": "hrn:hodei:audit:global:acme:event/1",
+      "note": "global is a literal region value, not the empty-region alias."
+    },
+    {
+      "id": "canonical/account-case",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:Acme:repository/releases",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "Acme",
+        "resource_type": "repository",
+        "resource_path": "releases"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:Acme:repository/releases",
+      "note": "Accounts are case-sensitive; Acme and acme are different scopes."
+    },
+    {
+      "id": "canonical/dotted-path",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:acme:object/file.txt",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "object",
+        "resource_path": "file.txt"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:object/file.txt"
+    },
+    {
+      "id": "canonical/empty-region-nested",
+      "origin": "artifacts-v1",
+      "input": "hrn:hodei:artifacts::acme:repository/releases/v2",
+      "syntax": "valid",
+      "migration": "alias",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "releases/v2"
+      },
+      "canonical": "hrn:hodei:artifacts::acme:repository/releases/v2"
+    },
+    {
+      "id": "canonical/physical-artifact",
+      "origin": "artifacts-v1",
+      "input": "hrn:hodei:artifacts::acme:physical-artifact/sha256-abc",
+      "syntax": "valid",
+      "migration": "alias",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "",
+        "account": "acme",
+        "resource_type": "physical-artifact",
+        "resource_path": "sha256-abc"
+      },
+      "canonical": "hrn:hodei:artifacts::acme:physical-artifact/sha256-abc"
+    },
+    {
+      "id": "canonical/uuid-path",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:acme:package-version/550e8400-e29b-41d4-a716-446655440000",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "package-version",
+        "resource_path": "550e8400-e29b-41d4-a716-446655440000"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:package-version/550e8400-e29b-41d4-a716-446655440000"
+    },
+    {
+      "id": "reject/no-prefix",
+      "origin": "unknown",
+      "input": "aws:iam::123456789012:User/alice",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidPrefix"
+    },
+    {
+      "id": "reject/uppercase-prefix",
+      "origin": "unknown",
+      "input": "HRN:hodei:artifacts:eu:acme:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidPrefix"
+    },
+    {
+      "id": "reject/component-count",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidComponentCount"
+    },
+    {
+      "id": "reject/empty-partition",
+      "origin": "unknown",
+      "input": "hrn::artifacts:eu:acme:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "EmptyField",
+      "errorField": "partition"
+    },
+    {
+      "id": "reject/empty-service",
+      "origin": "unknown",
+      "input": "hrn:hodei::eu:acme:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "EmptyField",
+      "errorField": "service"
+    },
+    {
+      "id": "reject/empty-account",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu::repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "EmptyField",
+      "errorField": "account"
+    },
+    {
+      "id": "reject/empty-type",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "EmptyField",
+      "errorField": "resource_type"
+    },
+    {
+      "id": "reject/empty-path",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "EmptyField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/double-slash",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/a//b",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/dot-segment",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/./a",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/dotdot-segment",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/../admin",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/uppercase-region",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:EU-WEST-1:acme:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "region"
+    },
+    {
+      "id": "reject/colon-in-path",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/a:b",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidComponentCount"
+    },
+    {
+      "id": "reject/non-ascii",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/añejo",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "NonAscii"
+    },
+    {
+      "id": "reject/invalid-account",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme.inc:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "account"
+    },
+    {
+      "id": "reject/invalid-type",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:1repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_type"
+    },
+    {
+      "id": "reject/whitespace",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/a b",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/trailing-region-hyphen",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu-:acme:repository/r",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "region"
+    },
+    {
+      "id": "reject/action-as-resource",
+      "origin": "artifacts-legacy",
+      "input": "hrn:hodei:iam::acme:Action/read",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "ActionIsNotResource",
+      "note": "A scoped Action cannot be migrated without losing scope; only the empty-scope legacy form maps to ActionId."
+    },
+    {
+      "id": "action/legacy-empty-scope",
+      "origin": "artifacts-legacy",
+      "input": "hrn:aws:iam:::Action/read",
+      "syntax": "invalid",
+      "migration": "action",
+      "actionUid": "Iam::Action::\"read\"",
+      "error": "ActionIsNotResource"
+    },
+    {
+      "id": "ambiguous/audit-tenant-before-region",
+      "origin": "audit-trail",
+      "input": "hrn:hodei:audit:tenant-a:eu-west-1:event/1",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "audit",
+        "region": "tenant-a",
+        "account": "eu-west-1",
+        "resource_type": "event",
+        "resource_path": "1"
+      },
+      "canonical": "hrn:hodei:audit:tenant-a:eu-west-1:event/1",
+      "note": "Audit Trail stores tenant where the contract expects region. The parser cannot detect this; migration requires the origin."
+    },
+    {
+      "id": "ambiguous/authz-tenant-position",
+      "origin": "hodei-authz",
+      "input": "hrn:hodei:authz:eu-west-1:tenant-a:policy/p1",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "authz",
+        "region": "eu-west-1",
+        "account": "tenant-a",
+        "resource_type": "policy",
+        "resource_path": "p1"
+      },
+      "canonical": "hrn:hodei:authz:eu-west-1:tenant-a:policy/p1",
+      "note": "Authz v1 calls the fourth field tenant. It is accepted as account only when the service confirms tenant == account."
+    },
+    {
+      "id": "ambiguous/audit-global",
+      "origin": "audit-trail",
+      "input": "hrn:hodei:audit:tenant-a:global:event/1",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "audit",
+        "region": "tenant-a",
+        "account": "global",
+        "resource_type": "event",
+        "resource_path": "1"
+      },
+      "canonical": "hrn:hodei:audit:tenant-a:global:event/1",
+      "note": "Audit Trail stores tenant where the contract expects region; global is the region here. The parser cannot detect this; migration requires the origin."
+    },
+    {
+      "id": "ambiguous/authz-empty-region",
+      "origin": "hodei-authz",
+      "input": "hrn:hodei:authz::tenant-a:policy/p1",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "authz",
+        "region": "",
+        "account": "tenant-a",
+        "resource_type": "policy",
+        "resource_path": "p1"
+      },
+      "canonical": "hrn:hodei:authz::tenant-a:policy/p1",
+      "note": "Empty region is the v1 alias, but the fourth field is still a tenant, not an account."
+    },
+    {
+      "id": "canonical/uppercase-path",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:artifacts:eu-west-1:acme:repository/Releases",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu-west-1",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "Releases"
+      },
+      "canonical": "hrn:hodei:artifacts:eu-west-1:acme:repository/Releases",
+      "note": "Path is case-sensitive and is never lowercased."
+    },
+    {
+      "id": "reject/percent-encoding",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/%2e%2e/admin",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/backslash",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/..\\admin",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/lowercase-action",
+      "origin": "unknown",
+      "input": "hrn:hodei:iam::acme:action/read",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "ActionIsNotResource"
+    },
+    {
+      "id": "reject/scoped-action",
+      "origin": "unknown",
+      "input": "hrn:hodei:iam:eu-west-1:acme:Action/read",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "ActionIsNotResource"
+    },
+    {
+      "id": "ambiguous/artifacts-v1-with-region",
+      "origin": "artifacts-v1",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/r",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "r"
+      },
+      "canonical": "hrn:hodei:artifacts:eu:acme:repository/r",
+      "note": "Artifacts v1 is only the empty-region alias; a v1 string with a region needs provenance."
+    },
+    {
+      "id": "reject/too-long",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "TooLong"
+    },
+    {
+      "id": "reject/control-char",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/a\u0001b",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource_path"
+    },
+    {
+      "id": "reject/missing-slash",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "InvalidField",
+      "errorField": "resource"
+    },
+    {
+      "id": "ambiguous/unknown-origin",
+      "origin": "unknown",
+      "input": "hrn:hodei:artifacts:eu:acme:repository/r",
+      "syntax": "valid",
+      "migration": "ambiguous",
+      "parsed": {
+        "partition": "hodei",
+        "service": "artifacts",
+        "region": "eu",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "r"
+      },
+      "canonical": "hrn:hodei:artifacts:eu:acme:repository/r",
+      "note": "A syntactically valid string without provenance is ambiguous by default."
+    },
+    {
+      "id": "reject/action-uppercase",
+      "origin": "unknown",
+      "input": "hrn:hodei:iam::acme:ACTION/read",
+      "syntax": "invalid",
+      "migration": "rejected",
+      "error": "ActionIsNotResource"
+    },
+    {
+      "id": "canonical/service-digit",
+      "origin": "artifacts-v2",
+      "input": "hrn:hodei:9a:eu:acme:repository/r",
+      "syntax": "valid",
+      "migration": "canonical",
+      "parsed": {
+        "partition": "hodei",
+        "service": "9a",
+        "region": "eu",
+        "account": "acme",
+        "resource_type": "repository",
+        "resource_path": "r"
+      },
+      "canonical": "hrn:hodei:9a:eu:acme:repository/r",
+      "note": "A digit-leading service is valid for resources; ActionId requires a leading letter."
+    }
+  ],
+  "relations": [
+    {
+      "id": "equality/same",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "right": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "expected": true
+    },
+    {
+      "id": "equality/account-homonym",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:eu-west-1:account-a:repository/releases",
+      "right": "hrn:hodei:artifacts:eu-west-1:account-b:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "equality/region-homonym",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "right": "hrn:hodei:artifacts:us-east-1:acme:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "equality/service-case",
+      "kind": "equality",
+      "left": "hrn:hodei:Artifacts:eu-west-1:acme:repository/releases",
+      "right": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "expected": true
+    },
+    {
+      "id": "equality/global-vs-empty-region",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:global:acme:repository/releases",
+      "right": "hrn:hodei:artifacts::acme:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "descendant/nested",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases/v2",
+      "expected": true
+    },
+    {
+      "id": "descendant/prefix-trap",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases-old",
+      "expected": false
+    },
+    {
+      "id": "descendant/other-account",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:account-a:repository/releases",
+      "descendant": "hrn:hodei:artifacts:eu-west-1:account-b:repository/releases/v2",
+      "expected": false
+    },
+    {
+      "id": "descendant/same-is-not-descendant",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "parent/nested",
+      "kind": "parent",
+      "child": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases/v2",
+      "parent": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases"
+    },
+    {
+      "id": "parent/single-segment",
+      "kind": "parent",
+      "child": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "parent": null
+    },
+    {
+      "id": "equality/account-case",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:eu-west-1:Acme:repository/releases",
+      "right": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "equality/path-case",
+      "kind": "equality",
+      "left": "hrn:hodei:artifacts:eu-west-1:acme:repository/Releases",
+      "right": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "expected": false
+    },
+    {
+      "id": "descendant/different-service",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:iam:eu-west-1:acme:repository/releases/v2",
+      "expected": false
+    },
+    {
+      "id": "descendant/different-region",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:artifacts:us-east-1:acme:repository/releases/v2",
+      "expected": false
+    },
+    {
+      "id": "descendant/different-type",
+      "kind": "descendant",
+      "ancestor": "hrn:hodei:artifacts:eu-west-1:acme:repository/releases",
+      "descendant": "hrn:hodei:artifacts:eu-west-1:acme:package-version/releases/v2",
+      "expected": false
+    }
+  ]
+}
