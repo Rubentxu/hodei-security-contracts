@@ -23,5 +23,5 @@ pub use hrn::{
     Hrn, MAX_ACCOUNT_LEN, MAX_HRN_LEN, MAX_PARTITION_LEN, MAX_REGION_LEN, MAX_RESOURCE_PATH_LEN,
     MAX_RESOURCE_TYPE_LEN, MAX_SERVICE_LEN,
 };
-pub use legacy::LegacyHrnFields;
+pub use legacy::{LegacyHrnFields, MigrationContext};
 pub use migration::{MigrationClass, Origin, classify};

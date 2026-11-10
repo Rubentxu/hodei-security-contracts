@@ -7,7 +7,24 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::migration::Origin;
 use crate::{Hrn, HrnError};
+
+/// Explicit provenance required to interpret a legacy field object.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MigrationContext {
+    origin: Origin,
+}
+
+impl MigrationContext {
+    pub fn new(origin: Origin) -> Self {
+        Self { origin }
+    }
+
+    pub fn origin(self) -> Origin {
+        self.origin
+    }
+}
 
 /// The JSON/field shape used by `hodei-hrn` 0.1.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -20,18 +37,27 @@ pub struct LegacyHrnFields {
     pub resource_id: String,
 }
 
-impl TryFrom<LegacyHrnFields> for Hrn {
-    type Error = HrnError;
-
-    fn try_from(value: LegacyHrnFields) -> Result<Self, Self::Error> {
-        Hrn::new(
-            &value.partition,
-            &value.service,
-            &value.region,
-            &value.tenant_id,
-            &value.resource_type,
-            &value.resource_id,
-        )
+impl LegacyHrnFields {
+    /// Convert the 0.1 field object only when the caller supplies provenance.
+    ///
+    /// `tenant_id` is not universally synonymous with `account`: Authz v1 and
+    /// Audit Trail layouts are ambiguous. Those origins are rejected instead of
+    /// silently reinterpreting the field.
+    pub fn into_canonical(self, context: MigrationContext) -> Result<Hrn, HrnError> {
+        match context.origin {
+            Origin::ArtifactsV1 if !self.region.is_empty() => Err(HrnError::AmbiguousOrigin),
+            Origin::ArtifactsV1 | Origin::ArtifactsV2 => Hrn::new(
+                &self.partition,
+                &self.service,
+                &self.region,
+                &self.tenant_id,
+                &self.resource_type,
+                &self.resource_id,
+            ),
+            Origin::HodeiAuthzV1 | Origin::AuditTrail | Origin::Unknown => {
+                Err(HrnError::AmbiguousOrigin)
+            }
+        }
     }
 }
 

@@ -37,7 +37,7 @@ assert_eq!(hrn.to_string(), "hrn:hodei:documents-api:global:tenant-a:document/do
 - `HrnBuilder::default()` no pone defaults (como 0.1); `HrnBuilder::new()` usa `hodei`/`global`.
 - `tenant_id()` es alias de `account()` y `resource_id()` de `resource_path()`; el alias es solo para el layout Authz v1, no una equivalencia semántica general.
 - `hodei_hrn::api::Hrn` sigue existiendo.
-- `LegacyHrnFields` convierte el JSON de campos de 0.1 al string canónico.
+- `LegacyHrnFields::into_canonical(MigrationContext)` convierte el JSON de campos de 0.1 solo con un origen explícito; orígenes ambiguos se rechazan.
 - Los campos públicos ya no son mutables: usa `Hrn::new`, el builder o el parser.
 
 ## Migración y aliases
