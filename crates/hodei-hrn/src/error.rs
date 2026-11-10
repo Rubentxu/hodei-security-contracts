@@ -14,6 +14,17 @@ pub(crate) fn escape_value(value: &str) -> String {
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 #[non_exhaustive]
 pub enum HrnError {
+    /// Compatibility variant retained for 0.1 match arms; the parser uses
+    /// the granular variants below.
+    #[error("invalid HRN format")]
+    InvalidFormat,
+
+    #[error("invalid resource part: expected '<type>/<path>'")]
+    InvalidResourcePart,
+
+    #[error("missing HRN part: {0}")]
+    MissingPart(String),
+
     #[error("HRN must be ASCII")]
     NonAscii,
 

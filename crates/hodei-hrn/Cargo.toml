@@ -4,7 +4,13 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 description = "Canonical Hodei Resource Names: strict parsing, canonicalization and scope-aware comparison"
+authors = ["Ruben Dario Cabrera Garcia <rubentxu74@gmail.com>"]
+documentation = "https://docs.rs/hodei-hrn"
+homepage = "https://github.com/Rubentxu/hodei-security-contracts"
+keywords = ["hrn", "resource", "identifier", "authorization"]
+categories = ["data-structures", "authentication"]
 repository.workspace = true
+readme = "README.md"
 
 [dependencies]
 serde = { workspace = true }

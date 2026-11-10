@@ -45,6 +45,40 @@ pub struct Hrn {
 }
 
 impl Hrn {
+    /// Build a validated HRN from its parts.
+    ///
+    /// `resource_path` may contain `/`. No part may contain the `:` separator
+    /// and `resource_type` must not contain `/`; `service` is lowercased by the
+    /// canonical parser. The total length is checked before formatting.
+    pub fn new(
+        partition: &str,
+        service: &str,
+        region: &str,
+        account: &str,
+        resource_type: &str,
+        resource_path: &str,
+    ) -> Result<Self, HrnError> {
+        if resource_type.contains('/') {
+            return Err(invalid("resource_type", resource_type));
+        }
+
+        let total = partition
+            .len()
+            .saturating_add(service.len())
+            .saturating_add(region.len())
+            .saturating_add(account.len())
+            .saturating_add(resource_type.len())
+            .saturating_add(resource_path.len())
+            .saturating_add(9);
+        if total > MAX_HRN_LEN {
+            return Err(HrnError::TooLong(MAX_HRN_LEN));
+        }
+
+        let raw =
+            format!("hrn:{partition}:{service}:{region}:{account}:{resource_type}/{resource_path}");
+        Self::parse(&raw)
+    }
+
     /// Parse and canonicalize a resource HRN.
     pub fn parse(input: &str) -> Result<Self, HrnError> {
         // The length check comes first: an over-long input must not be
@@ -121,6 +155,31 @@ impl Hrn {
     /// Canonical string representation.
     pub fn canonical(&self) -> String {
         self.to_string()
+    }
+
+    /// Compatibility alias for the legacy `tenant_id` field.
+    pub fn tenant_id(&self) -> &str {
+        &self.account
+    }
+
+    /// Compatibility alias for the legacy `resource_id` field.
+    pub fn resource_id(&self) -> &str {
+        &self.resource_path
+    }
+
+    /// Compatibility parser that returns `None` instead of a typed error.
+    ///
+    /// This is syntax-only, like [`Hrn::parse`]. It must not be used to read
+    /// persisted legacy data without provenance: use
+    /// [`crate::migration::classify`] for Artifacts v1, Authz v1, Audit Trail
+    /// or unknown origins.
+    pub fn from_string(input: &str) -> Option<Self> {
+        Self::parse(input).ok()
+    }
+
+    /// Start a builder with the legacy defaults (`hodei`/`global`).
+    pub fn builder() -> crate::builder::HrnBuilder {
+        crate::builder::HrnBuilder::new()
     }
 
     pub fn partition(&self) -> &str {
