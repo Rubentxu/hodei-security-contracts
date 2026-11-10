@@ -48,4 +48,4 @@ Esta matriz decide qué hacer con las cadenas HRN que ya existen. No se reescrib
 
 ## Consecuencia para la publicación
 
-`hodei-hrn` 0.2.0 implementa este contrato. El crate 0.1.0 de `hodei-authz` usaba `tenant_id` en la posición de cuenta y no validaba; su sustitución requiere un adapter y pruebas sobre fixtures, no un reemplazo masivo. Los datos persistidos se conservan hasta demostrar equivalencia.
+`hodei-hrn` 0.2.1 implementa este contrato. El crate 0.1.0 de `hodei-authz` usaba `tenant_id` en la posición de cuenta y no validaba; su sustitución requiere un adapter y pruebas sobre fixtures, no un reemplazo masivo. Los datos persistidos se conservan hasta demostrar equivalencia.

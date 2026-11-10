@@ -6,4 +6,4 @@
 pub use crate::builder::HrnBuilder;
 pub use crate::error::HrnError;
 pub use crate::hrn::Hrn;
-pub use crate::legacy::LegacyHrnFields;
+pub use crate::legacy::{LegacyHrnFields, MigrationContext};

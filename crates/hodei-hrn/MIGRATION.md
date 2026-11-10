@@ -1,6 +1,6 @@
 # Migración de hodei-hrn 0.1 → 0.2
 
-`hodei-hrn` 0.2.0 implementa el contrato HRN v2. La versión 0.1.0 publicada no se renombra ni se sobrescribe: 0.2.0 es una versión nueva y la titularidad de `hodei-hrn` en crates.io se verifica en HSP-3 antes de publicar.
+`hodei-hrn` 0.2.1 implementa el contrato HRN v2. La versión 0.1.0 publicada no se renombra ni se sobrescribe: 0.2.1 es una versión nueva y la titularidad de `hodei-hrn` en crates.io se verifica en HSP-3 antes de publicar.
 
 ## Qué se conserva
 
@@ -44,13 +44,16 @@
 0.2 serializa `Hrn` como string. Para leer el JSON 0.1, usa `LegacyHrnFields` y convierte explícitamente:
 
 ```rust
-use hodei_hrn::{Hrn, LegacyHrnFields};
+use hodei_hrn::migration::Origin;
+use hodei_hrn::{Hrn, LegacyHrnFields, MigrationContext};
 
 let fields: LegacyHrnFields = serde_json::from_str(old_json)?;
-let hrn = Hrn::try_from(fields)?; // valida y canonicaliza
+let hrn = fields.into_canonical(MigrationContext::new(Origin::ArtifactsV2))?;
 ```
 
 `LegacyHrnFields::from(&hrn)` produce la forma antigua para exportadores.
+
+La conversión exige `MigrationContext` con un origen explícito. `HodeiAuthzV1`, `AuditTrail` y `Unknown` se rechazan con `HrnError::AmbiguousOrigin` porque `tenant_id` no es necesariamente la cuenta.
 
 ## SQLx
 
@@ -69,5 +72,5 @@ Se restauran la licencia dual `MIT OR Apache-2.0`, `authors`, `documentation`, `
 ## Publicación
 
 - El nombre `hodei-hrn` no se renombra.
-- 0.2.0 debe publicarse con el mismo nombre y verificar la titularidad con `cargo owner --list hodei-hrn` antes de HSP-3.
+- 0.2.1 debe publicarse con el mismo nombre y verificar la titularidad con `cargo owner --list hodei-hrn` antes de HSP-3.
 - La prueba de consumo desde un proyecto externo sin dependencias `path` es HSP-3.

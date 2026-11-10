@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 — Explicit legacy migration context
+
+- **Breaking:** `TryFrom<LegacyHrnFields> for Hrn` is removed. Use
+  `LegacyHrnFields::into_canonical(MigrationContext)` with an explicit origin.
+- `HodeiAuthzV1`, `AuditTrail`, `Unknown`, and `ArtifactsV1` with a non-empty
+  region return `HrnError::AmbiguousOrigin` instead of guessing the account.
+
 ## 0.2.0 — HRN v2 contract
 
 - Canonical parsing and serialization of `hrn:<partition>:<service>:<region>:<account>:<type>/<path>`.

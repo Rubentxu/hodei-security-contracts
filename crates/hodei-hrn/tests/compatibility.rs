@@ -1,5 +1,7 @@
 //! Compatibility tests for the published 0.1 API.
 
+use hodei_hrn::legacy::MigrationContext;
+use hodei_hrn::migration::Origin;
 use hodei_hrn::{Hrn, HrnBuilder, HrnError, LegacyHrnFields};
 
 #[test]
@@ -224,7 +226,9 @@ fn legacy_json_object_can_be_converted_explicitly() {
         "resource_id": "releases"
     }"#;
     let fields: LegacyHrnFields = serde_json::from_str(json).unwrap();
-    let hrn = Hrn::try_from(fields).unwrap();
+    let hrn = fields
+        .into_canonical(MigrationContext::new(Origin::ArtifactsV2))
+        .unwrap();
     assert_eq!(
         hrn.to_string(),
         "hrn:hodei:artifacts:global:acme:repository/releases"
@@ -283,4 +287,43 @@ fn constructor_rejects_invalid_partition_and_region() {
     assert!(Hrn::new("Hodei", "artifacts", "eu", "acme", "repository", "r").is_err());
     assert!(Hrn::new("hodei", "artifacts", "EU", "acme", "repository", "r").is_err());
     assert!(Hrn::new("hodei", "artifacts", "eu", "acme", "repository", "..").is_err());
+}
+
+#[test]
+fn legacy_field_conversion_requires_an_explicit_non_ambiguous_origin() {
+    let fields = LegacyHrnFields {
+        partition: "hodei".to_string(),
+        service: "iam".to_string(),
+        region: String::new(),
+        tenant_id: "tenant-a".to_string(),
+        resource_type: "User".to_string(),
+        resource_id: "alice".to_string(),
+    };
+
+    let canonical = fields
+        .clone()
+        .into_canonical(MigrationContext::new(Origin::ArtifactsV1))
+        .unwrap();
+    assert_eq!(canonical.account(), "tenant-a");
+
+    let mut v1_with_region = fields.clone();
+    v1_with_region.region = "global".to_string();
+    assert_eq!(
+        v1_with_region
+            .into_canonical(MigrationContext::new(Origin::ArtifactsV1))
+            .unwrap_err(),
+        HrnError::AmbiguousOrigin,
+        "ArtifactsV1 with a non-empty region is ambiguous per the migration matrix"
+    );
+
+    for origin in [Origin::HodeiAuthzV1, Origin::AuditTrail, Origin::Unknown] {
+        assert_eq!(
+            fields
+                .clone()
+                .into_canonical(MigrationContext::new(origin))
+                .unwrap_err(),
+            HrnError::AmbiguousOrigin,
+            "origin {origin:?} must not imply tenant_id == account"
+        );
+    }
 }

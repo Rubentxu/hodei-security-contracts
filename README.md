@@ -23,6 +23,6 @@ Los tests recorren `vectors.json`: parseo, canonicalización, rechazos, límites
 
 ## Estado
 
-- `hodei-hrn` 0.2.0 es la referencia del contrato. La consolidación de la API publicada y la publicación en crates.io corresponden a HSP-2/HSP-3.
+- `hodei-hrn` 0.2.1 es la referencia del contrato. La consolidación de la API publicada y la publicación en crates.io corresponden a HSP-2/HSP-3.
 - Los datos persistidos no se reescriben: los alias y la ambigüedad se resuelven con adapters y decisiones explícitas.
 - Este repositorio no contiene servicios, persistencia ni evaluación de políticas.
