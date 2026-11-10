@@ -11,6 +11,7 @@ Contratos de seguridad Hodei: HRN canónico, gramática, vectores de compatibili
 | [`contracts/hrn/vectors.json`](contracts/hrn/vectors.json) | Vectores ejecutables de conformidad, igualdad, descendencia y acciones |
 | [`language/security-glossary.md`](language/security-glossary.md) | Vocabulario compartido entre repositorios |
 | [`crates/hodei-hrn`](crates/hodei-hrn) | Implementación de referencia del contrato (sin IO, sin Cedar, sin Tokio) |
+| [`crates/hodei-hrn/MIGRATION.md`](crates/hodei-hrn/MIGRATION.md) | Ruptura y compatibilidad 0.1 → 0.2 |
 
 ## Verificación
 

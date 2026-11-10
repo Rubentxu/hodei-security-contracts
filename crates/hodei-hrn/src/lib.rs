@@ -9,14 +9,19 @@
 #![forbid(unsafe_code)]
 
 pub mod action;
+pub mod api;
+pub mod builder;
 pub mod error;
 pub mod hrn;
+pub mod legacy;
 pub mod migration;
 
 pub use action::{ActionId, MAX_ACTION_INPUT_LEN};
+pub use builder::HrnBuilder;
 pub use error::{ActionIdError, HrnError};
 pub use hrn::{
     Hrn, MAX_ACCOUNT_LEN, MAX_HRN_LEN, MAX_PARTITION_LEN, MAX_REGION_LEN, MAX_RESOURCE_PATH_LEN,
     MAX_RESOURCE_TYPE_LEN, MAX_SERVICE_LEN,
 };
+pub use legacy::LegacyHrnFields;
 pub use migration::{MigrationClass, Origin, classify};
